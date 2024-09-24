@@ -98,7 +98,7 @@ async def send_question(bot: Bot, state: FSMContext) -> None:
     chat_id = data['chat_id']
 
     test_chat_ids = [
-        '477582303',    # Дима
+        # '477582303',    # Дима
         '1334370908',   # Наташа
         '494656681'     # Вика
     ]
