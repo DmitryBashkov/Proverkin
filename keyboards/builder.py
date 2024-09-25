@@ -1,6 +1,13 @@
-from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.types import (
+    InlineKeyboardMarkup, 
+    InlineKeyboardButton
+)
 from aiogram.utils.keyboard import InlineKeyboardBuilder
-from callbacks.quiz_callback import ReadyCallbackFactory, QuizCallbackFactory
+
+from callbacks.quiz_callback import (
+    ReadyCallbackFactory, 
+    QuizCallbackFactory
+)
 from callbacks.edit_callback import CancelEditCallbackFactory
 from callbacks.score_gpt_callback import GPTScoreCallbackFactory
 from callbacks.trial_set_callback import TrialSetCallbackFactory
@@ -31,10 +38,21 @@ def quiz_answers_keyboard(question: Question) -> InlineKeyboardMarkup:
                text = answer.text if question.long_asnwers == False else answer.bullet,
                callback_data = QuizCallbackFactory(
                     right = answer.right,
-                    id_ = answer.id_
+                    id_ = answer.id_,
+                    incorrect_question = False,
+                    question_id = question.id
                )
           )
 
+     keyboard.button(
+          text = f'❗️Некорректный вопрос❗️',
+          callback_data = QuizCallbackFactory(
+               id_ = 0,
+               incorrect_question = True,
+               question_id = question.id,
+               right = True                  # by this we grads users for response
+          )
+     )
 
      if not question.long_asnwers: keyboard.adjust(1)
 

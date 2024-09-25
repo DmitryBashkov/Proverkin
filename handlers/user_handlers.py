@@ -31,7 +31,7 @@ async def cmd_restart(message: Message, bot: Bot, state: FSMContext, is_test = F
     logger.info(f'(username: {message.from_user.username}), (chat_id: {message.from_user.id}): команда /restart')
 
     #проверяем, если ли юзер в бд
-    user = sqlite3_connector.get_user(message.from_user.username)
+    user = sqlite3_connector.get_user(username=message.from_user.username)
 
     if user == None:
         logger.info(f'(username: {message.from_user.username}), (chat_id: {message.from_user.id}): Пользователя нет в бд')

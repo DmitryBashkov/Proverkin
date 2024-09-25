@@ -392,6 +392,7 @@ class SQLite3Connector:
 
         '''
         returns (telegram_username, chat_id, *params)
+        use params to define exactly what you need
         '''
 
         if params == None:
@@ -746,6 +747,23 @@ class SQLite3Connector:
             'commit',
             False,
             log
+        )
+
+    @staticmethod
+    def update_question_type(question_id: int, question_type: str):
+        query = \
+            '''
+            update questions
+            set question_type = ?
+            where question_id = ?
+            '''
+
+        SQLite3Connector.execute(
+            config.db.l_path,
+            query,
+            'commit',
+            False,
+            (question_type, question_id)
         )
 
     @staticmethod

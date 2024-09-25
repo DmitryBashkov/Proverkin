@@ -42,6 +42,7 @@ async def main():
     
     # Инициализируем бот и диспетчер
     bot: Bot = Bot(token = config.tg_bot.token)
+    
     # storage: MemoryStorage = MemoryStorage()
     # dp: Dispatcher = Dispatcher(storage = storage)
 
@@ -54,22 +55,25 @@ async def main():
 
     # Создаем список с командами и их описанием для кнопки menu
     main_menu_commands = [
-        BotCommand(command='/quiz',
-                description='Запустить квиз прямо сейчас'),
-        BotCommand(command='/restart',
-                description='Если что-то пошло не так и вы перестали получать запланированные квизы'),
+        BotCommand(
+            command = '/quiz',
+            description = 'Запустить квиз прямо сейчас'),
+        BotCommand(
+            command = '/restart',
+            description = 'Если что-то пошло не так и вы перестали получать запланированные квизы'),
     ]
 
+    # setting commands for the bot
     await bot.set_my_commands(main_menu_commands)
 
 
-    
-    # запускаем проверку на наличие квиза для все пользователей
+    # checking database
     assert sqlite3_connector.init_check()
 
     total_users = sqlite3_connector.get_user_qty()
     total_scheduled_users = 0
 
+    # запускаем проверку на наличие квиза для все пользователей
     for user in sqlite3_connector.get_all_active_users_with_chat_id():
         await schedule_quiz(bot, user[0], user[1], notify = False)
         total_scheduled_users += 1

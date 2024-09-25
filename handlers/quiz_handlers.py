@@ -6,7 +6,10 @@ from aiogram.fsm.context import FSMContext
 
 # project
 from service.quiz import send_question, start_quiz, schedule_quiz
-from callbacks.quiz_callback import ReadyCallbackFactory, QuizCallbackFactory
+from callbacks.quiz_callback import (
+    ReadyCallbackFactory, 
+    QuizCallbackFactory
+)
 from callbacks.score_gpt_callback import GPTScoreCallbackFactory
 from states.states import QuizState
 from messages.messages import *
@@ -48,21 +51,31 @@ async def get_answer(callback: CallbackQuery, bot: Bot, callback_data = QuizCall
     chat_id = data['chat_id']
     question_id = data['question_id']
     start_time = data['start_time']
+    answer = None
 
-    answer = sqlite3_connector.get_answers(answer_id = callback_data.id_)[0][0]
+    # check if user reports about incorrect question
+    if callback_data.incorrect_question:
+        await callback.message.answer(f'Спасибо, информацию зафиксировали!')
+        sqlite3_connector.update_question_type(callback_data.question_id, 'incorrect')
 
-    # проверяем правильный ли ответ дал пользователь
-
-    if callback_data.right:
-        await callback.answer(text = '✅ ' + random.choice(CONGRATS), show_alert = True)
-        await callback.message.answer(f"✅ {answer}")
-        await callback.message.delete_reply_markup()
-
+    # if question correct we check answer
     else:
-        await callback.answer(text = '❌ ' + random.choice(WRONG), show_alert = True)
-        await callback.message.answer(f'❌ {answer}')
-        await callback.message.answer(f"Правильный ответ: {sqlite3_connector.get_answers(question_id = question_id, right = True)[0][0]}")
-        await callback.message.delete_reply_markup()
+
+
+        answer = sqlite3_connector.get_answers(answer_id = callback_data.id_)[0][0]
+
+        # проверяем правильный ли ответ дал пользователь
+
+        if callback_data.right:
+            await callback.answer(text = '✅ ' + random.choice(CONGRATS), show_alert = True)
+            await callback.message.answer(f"✅ {answer}")
+            await callback.message.delete_reply_markup()
+
+        else:
+            await callback.answer(text = '❌ ' + random.choice(WRONG), show_alert = True)
+            await callback.message.answer(f'❌ {answer}')
+            await callback.message.answer(f"Правильный ответ: {sqlite3_connector.get_answers(question_id = question_id, right = True)[0][0]}")
+            await callback.message.delete_reply_markup()
 
     mysql_connector.add_log([
             datetime.datetime.now().strftime('%Y-%m-%d'),
@@ -89,6 +102,7 @@ async def get_answer(callback: CallbackQuery, bot: Bot, callback_data = QuizCall
     else:
         await state.update_data(randomized_question_list = randomized_question_list)
         await send_question(bot, state)
+
 
 @router.callback_query(GPTScoreCallbackFactory.filter(), StateFilter(QuizState.get_answer))
 async def get_gpt_score(callback: CallbackQuery, bot: Bot, callback_data = GPTScoreCallbackFactory, state = FSMContext):

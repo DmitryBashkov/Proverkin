@@ -41,6 +41,7 @@ class User:
         self._sets = None
         self._started = None
         self._exist = None
+        self._blocked = None                # заблокирован ли бот пользователем
         
 
         # getting data from DB and associate it with class attributes
@@ -65,12 +66,6 @@ class User:
                     else:
                         continue
                 self.__setattr__("_"+params[i], data_)
-                
-            # if self._chat_id != None:
-            #     pass
-            #     self.started = True
-            # else:
-            #     self._chat_id = chat_id
 
             if hasattr(self, '_user_id') and self._user_id != None:
                 self._exist = True
