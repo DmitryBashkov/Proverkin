@@ -113,7 +113,7 @@ async def get_gpt_score(callback: CallbackQuery, bot: Bot, callback_data = GPTSc
         username = sqlite3_connector.get_user_by_chat_id(chat_id)
         logging.info(f'(username: {username}), (chat_id: {chat_id}): Заканчиваем квиз')
         await callback.message.answer(f'Квиз закончен! Молодец! 💪')
-        if not get_job(quiz_scheduler.get_jobs(), callback.from_user.username):
+        if not get_job(callback.from_user.username):
             await schedule_quiz(bot, callback.from_user.username, chat_id)
         await state.clear()
 

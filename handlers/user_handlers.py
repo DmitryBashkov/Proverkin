@@ -48,7 +48,7 @@ async def cmd_restart(message: Message, bot: Bot, state: FSMContext, is_test = F
     await state.clear()
 
     # удаляем задачу из планировщика, если такая была, и ставим новую
-    existing_job = get_job(quiz_scheduler.get_jobs(), message.from_user.username)
+    existing_job = get_job(message.from_user.username)
 
     if existing_job != None:
         logger.info(f'(username: {message.from_user.username}), (chat_id: {message.from_user.id}): у пользователя есть запланированный квиз {existing_job.id} на {existing_job.next_run_time.strftime("%d.%m в %H:%M")}')
