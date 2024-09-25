@@ -2,6 +2,7 @@
 from aiogram import Bot
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.storage.base import StorageKey
+from aiogram.exceptions import TelegramForbiddenError
 
 # project
 from utils.schedulers import quiz_scheduler
@@ -38,9 +39,12 @@ async def schedule_quiz(bot: Bot, username: str, chat_id: int, notify: bool = Tr
     logger.info(f'(username: {username}), (chat_id: {chat_id}): Квиз для запланирован на {run_date.strftime("%d.%m в %H:%M")}')
 
     if notify:
-        await bot.send_message(chat_id = chat_id,
-                            text = f'Следующий квиз запланирован на <b>{run_date.strftime("%d.%m в %H:%M")}</b>',
-                            parse_mode = 'HTML')
+        try:
+            await bot.send_message(chat_id = chat_id,
+                                text = f'Следующий квиз запланирован на <b>{run_date.strftime("%d.%m в %H:%M")}</b>',
+                                parse_mode = 'HTML')
+        except TelegramForbiddenError as e:
+            logging.error(f'(username: {username}), (chat_id: {chat_id}): {e}')
 
 async def check_for_quiz(bot: Bot, chat_id: int) -> None:
 
