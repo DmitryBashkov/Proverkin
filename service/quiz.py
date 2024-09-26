@@ -63,12 +63,15 @@ async def check_for_quiz(bot: Bot, chat_id: int) -> None:
 
     for _set in sets_list:
         msg_text.append(f'{_set[1]}: {_set[2]} вопросов')
-
-    await bot.send_message(
-        chat_id = chat_id, 
-        text = f'Готов?\n\nДля тебя есть вопросы из списков:\n\n- {linesep.join(msg_text)}', 
-        reply_markup = quiz_ready_keyboard()
-    )
+    
+    try:
+        await bot.send_message(
+            chat_id = chat_id, 
+            text = f'Готов?\n\nДля тебя есть вопросы из списков:\n\n- {linesep.join(msg_text)}', 
+            reply_markup = quiz_ready_keyboard()
+        )
+    except TelegramForbiddenError as e:
+        logging.error(f'(username: {username}), (chat_id: {chat_id}): {e}')
     
     await state.update_data(chat_id = chat_id)
 
