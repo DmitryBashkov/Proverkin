@@ -14,12 +14,11 @@ class Answer:
 
 class Question:
 
-    def __init__(self, question_id: int, for_quiz: bool = True):
+    def __init__(self, question_id: int, question_text: str, question_type: str, shuffle: bool = True):
 
         self.id = question_id
-        
-        self.thesis = None
-        self.text = sqlite3_connector.get_question_text(question_id)
+        self.text = question_text
+        self.question_type = question_type
 
         self.answers = []
         for answer in sqlite3_connector.get_answers(question_id):
@@ -30,7 +29,7 @@ class Question:
                 bullet = ''
             ))
 
-        if for_quiz:
+        if shuffle:
             random.shuffle(self.answers)
 
         '''
@@ -41,7 +40,7 @@ class Question:
 
         self.long_asnwers = False
 
-        if for_quiz:
+        if shuffle:
             for answer in self.answers:
                 if len(answer.text) > 35:
                     self._shorten_question()
@@ -79,17 +78,25 @@ class Question:
 
         return row
 
-
 class QuestionSet():
 
-    def __init__(self, set_id: int):
-
+    def __init__(self, set_id: int = None, set_name: str = None, need_questions = True):
+        self.set_id = set_id
+        self.set_name = set_name
         self.questions = []
 
-        for question_id in sqlite3_connector.get_question_ids_by_set_id(set_id):
-            self.questions.append(Question(question_id, False))
+        # need_question param need for form question list
+        if need_questions:
+            for q in sqlite3_connector.get_questions(set_id = set_id):
+                self.questions.append(
+                    Question(
+                        question_id = q[0],
+                        questions_text = q[1],
+                        question_type = q[2]
+                    )
+                )
 
-
-    pass
-
-
+    def __eq__(self, item):
+        if item == self.set_id:
+            return True
+        return False

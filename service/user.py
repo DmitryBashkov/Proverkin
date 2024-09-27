@@ -1,6 +1,7 @@
 # project
 from database.connector import SQLite3Connector as sqlite3_connector
 from errors.expections import NewUserException
+from service.question import QuestionSet
 
 from utils.misc import get_job
 
@@ -61,10 +62,14 @@ class User:
                 # params = ['user_id'].append(params) 
                 params = params
             )
+
+            # if didn't get any data from DB we assume that user do not exist
+            # so, set exist as False and stop init
             if data == None:
                 self._exist = False
                 return
             
+
             for i, data_ in enumerate(data):
                 if params[i] == 'chat_id':
                     if data_ != None:
@@ -97,14 +102,17 @@ class User:
             self._sets = self._get_user_sets()
         return self._sets
     
-    @question_sets.setter
-    def question_sets(self, sets):
-        self._sets = sets
-    
     @property
     def user_id(self):
         if self._user_id is None:
-            self._user_id = self._get_user_id_from_db()
+
+            if self._telegram_username is not None:
+                self._user_id = self._get_user_id_from_db(username = self._telegram_username)
+            elif self._chat_id is not None:
+                self._user_id = self._get_user_id_from_db(chat_id = self._chat_id)
+            else:
+                self._exist = False
+
         return self._user_id
     
     @user_id.setter
@@ -112,7 +120,6 @@ class User:
         if user_id > 0:
             self._user_id = user_id
 
-    
     @property
     def exist(self):
         return self._exist
@@ -151,13 +158,21 @@ class User:
     def started(self):
         return self._started
 
-    
     def __eq__(self, other):
         return self.username == other.username
     
     def _get_user_sets(self):
         # set_[1] -- set name
-        return [set_[1] for set_ in sqlite3_connector.get_users_set_list(self.chat_id)]
+        user_sets = []
+        for s in sqlite3_connector.get_sets(user_id = self.user_id):
+            user_sets.append(
+                QuestionSet(
+                    set_id = s[0], 
+                    set_name = s[1],
+                    need_questions = False)
+            )
+    
+        return user_sets
     
     def create(self, trial = False):
         '''

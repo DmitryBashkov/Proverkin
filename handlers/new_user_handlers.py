@@ -103,3 +103,4 @@ async def get_trial_set(callback: CallbackQuery, bot: Bot, state: FSMContext, ca
         await callback.message.answer(f'У вас уже есть этот набор вопросов\nНажмите /quiz для начала квиза')
 
     await schedule_quiz(bot, user.telegram_username, user.chat_id)
+    await state.clear()

@@ -667,6 +667,29 @@ class SQLite3Connector:
         return [row[0] for row in result]
     
     @staticmethod
+    def get_questions(set_id) -> list:
+        
+        query = \
+        '''
+        select
+            question_id,
+            text,
+            question_type
+        from 
+            questions
+        where
+            set_id = ?;
+        '''
+
+        return SQLite3Connector.execute(
+            config.db.l_path,
+            query,
+            'fetchall',
+            False,
+            (set_id,)
+        )
+    
+    @staticmethod
     def get_question_text(question_id) -> str:
         
         
@@ -891,6 +914,52 @@ class SQLite3Connector:
             (answer_text, right, answer_id)
         )
 
+    @staticmethod
+    def get_sets(
+        user_id: int = None,
+        account_id: int = None
+        ) -> list:
+        
+        '''
+        returns all sets that are used in accound_id (set_id, set_name)
+        '''
+        
+        by_user_id_query = \
+        '''
+        select distinct
+            sets.set_id, 
+            sets.set_name 
+		from 
+            sets
+        join 
+			user_sets on user_sets.set_id = sets.set_id,
+            users on users.user_id = user_sets.user_id
+        where 
+            users.user_id = ?;
+        '''
+        
+        by_account_id_query = \
+        '''
+        select distinct
+            sets.set_id, 
+            sets.set_name 
+        from 
+            sets 
+        join 
+            questions on questions.set_id = sets.set_id
+        where 
+            questions.account_id = ?;
+        '''
+
+
+        return SQLite3Connector.execute(
+            config.db.l_path,
+            by_account_id_query if account_id != None else by_user_id_query,
+            'fetchall',
+            False,
+            (account_id if account_id != None else user_id,)
+        )
+    
     @staticmethod
     def get_sets_by_account(account_id: int) -> list:
         
