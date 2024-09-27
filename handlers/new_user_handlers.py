@@ -12,6 +12,7 @@ from states.states import QuizState, TrialSetSelectionState, EditQuestionsState
 from messages.messages import *
 from keyboards.builder import trial_set_keyboard
 from callbacks.trial_set_callback import TrialSetCallbackFactory
+from errors.expections import NewUserException
 
 # misc
 import logging
@@ -39,11 +40,13 @@ async def cmd_start(message: Message, bot: Bot, state: FSMContext, is_test = Fal
 
     if not user.exist:
         logger.info(f'(username: {user.telegram_username}), (chat_id: {user.chat_id}): Пользователя нет в бд')
-
+        
         logger.info(f'(username: {user.telegram_username}), (chat_id: {user.chat_id}): Заводим нового пользователя')
-        user.account_id(0) # trial account
-        user.set_default()
-        user.create()
+        
+        try:
+            user.create(trial = True)
+        except NewUserException as e:
+            logger.info(e)
 
         logger.info(f'(username: {user.telegram_username}), (chat_id: {user.chat_id}): Переходим к выбору тестового сета')
         
@@ -52,8 +55,7 @@ async def cmd_start(message: Message, bot: Bot, state: FSMContext, is_test = Fal
              reply_markup = trial_set_keyboard()
         )
 
-        await state.update_data(chat_id = user.chat_id)
-        await state.update_data(username = user.telegram_username)
+        await state.update_data(user_dump = user.toJSON())
 
         await state.set_state(TrialSetSelectionState.get_set)
 
@@ -93,12 +95,9 @@ async def get_trial_set(callback: CallbackQuery, bot: Bot, state: FSMContext, ca
 
     data = await state.get_data()
 
-    user = User(
-         username = data['username'],
-         chat_id = data['chat_id']
-    )
+    user = User.from_dump(data['user_dump'])
 
-    if callback_data.set_id not in user.sets:
+    if callback_data.set_id not in user.question_sets:
         user.add_set(callback_data.set_id)
     else:
         await callback.message.answer(f'У вас уже есть этот набор вопросов\nНажмите /quiz для начала квиза')

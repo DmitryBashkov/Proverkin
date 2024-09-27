@@ -115,6 +115,11 @@ class SQLite3Connector:
         active: int = 1 
     ) -> int:
         
+        '''
+        puts a new user (record) into users table
+        returns user_id
+        '''
+        
         query = \
         '''
         insert into 

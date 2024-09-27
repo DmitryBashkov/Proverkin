@@ -1,5 +1,6 @@
 # project
 from database.connector import SQLite3Connector as sqlite3_connector
+from errors.expections import NewUserException
 
 from utils.misc import get_job
 
@@ -15,14 +16,19 @@ class User:
     This class represents a telegram user
     '''
 
-    def __init__(self, username = None, chat_id = None, params = ['user_id', 'chat_id'], dump = None):
+    def __init__(self, username = None, chat_id = None, params = ['user_id', 'chat_id', 'active'], **kwargs):
         
+        if len(kwargs) > 0:
+            for key, value in kwargs.items():
+                setattr(self, f"{key}", value)
+            return
 
-        
+        # base attributes
         self._telegram_username = username
         self._chat_id = chat_id
-        self._active = None
 
+        # additional attributes which get from DB
+        self._active = None
         self._user_id = None
         self._real_name = None
         self._phone_number = None
@@ -41,7 +47,7 @@ class User:
         self._sets = None
         self._started = None
         self._exist = None
-        self._blocked = None                # заблокирован ли бот пользователем
+        self._blocked = None                # forbidden by user or not
         
 
         # getting data from DB and associate it with class attributes
@@ -73,12 +79,27 @@ class User:
     def toJSON(self):
         return json.dumps(self, default=lambda o: o.__dict__)
 
-                
+    @classmethod
+    def from_dump(cls, json_string):
+        return cls._from_dict(json.loads(json_string))
+        
+    @classmethod
+    def _from_dict(cls, data):
+        return cls(
+            username = None, 
+            chat_id = None, 
+            params = None, 
+            **data)
+
     @property
-    def sets(self):
+    def question_sets(self):
         if self._sets is None or self._sets == []:
             self._sets = self._get_user_sets()
         return self._sets
+    
+    @question_sets.setter
+    def question_sets(self, sets):
+        self._sets = sets
     
     @property
     def user_id(self):
@@ -86,9 +107,19 @@ class User:
             self._user_id = self._get_user_id_from_db()
         return self._user_id
     
+    @user_id.setter
+    def user_id(self, user_id: int):
+        if user_id > 0:
+            self._user_id = user_id
+
+    
     @property
     def exist(self):
         return self._exist
+    
+    @exist.setter
+    def exist(self, exist):
+        self._exist = exist
     
     @property
     def telegram_username(self):
@@ -128,10 +159,7 @@ class User:
         # set_[1] -- set name
         return [set_[1] for set_ in sqlite3_connector.get_users_set_list(self.chat_id)]
     
-    def create(
-            self,
-
-        ):
+    def create(self, trial = False):
         '''
         adding new user into DB: 
             username,
@@ -142,14 +170,21 @@ class User:
         returns user_id
         '''
 
-        return sqlite3_connector.add_user(
+        user_id = sqlite3_connector.add_user(
             telegram_username = self._telegram_username,
             chat_id = self._chat_id,
             real_name = self._real_name,
-            account_id = self._account_id,
-            user_type = self._user_type,
-            active = self._active
+            account_id = 0 if trial else self._account_id ,
+            user_type = 'user' if trial else self._user_type,
+            active = 1 if trial else self._active
             )
+        
+        if user_id > 0:
+            self.user_id = user_id
+            self.exist = True
+            return user_id
+        else:
+            raise NewUserException(user_id)
 
     def add_chat_id(self, chat_id: int = None):
         '''
