@@ -75,7 +75,7 @@ async def main():
 
     # запускаем проверку на наличие квиза для все пользователей
     for user in sqlite3_connector.get_all_active_users_with_chat_id():
-        await schedule_quiz(bot, user[0], user[1], notify = False)
+        await schedule_quiz(bot, user[0], user[1], notify_user = False)
         total_scheduled_users += 1
 
     logging.info(f'Запланированы квизы для {total_scheduled_users} из {total_users} пользователей')
@@ -83,7 +83,6 @@ async def main():
 
     # Пропускаем накопившиеся апдейты и запускаем polling
     await bot.delete_webhook(drop_pending_updates = True)
-    # await dp.startup.register(set_main_menu)
     await dp.start_polling(bot)
 
 if __name__ == '__main__':

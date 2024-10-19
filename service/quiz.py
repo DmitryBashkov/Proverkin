@@ -28,7 +28,7 @@ logger = logging.getLogger(__name__)
 linesep = '\n- '
 
 
-async def schedule_quiz(bot: Bot, username: str, chat_id: int, notify: bool = True) -> None:
+async def schedule_quiz(bot: Bot, username: str, chat_id: int, notify_user: bool = True) -> None:
     run_date = get_new_time()
     quiz_scheduler.add_job(check_for_quiz, 
                            'date', 
@@ -38,7 +38,7 @@ async def schedule_quiz(bot: Bot, username: str, chat_id: int, notify: bool = Tr
     
     logger.info(f'(username: {username}), (chat_id: {chat_id}): Квиз для запланирован на {run_date.strftime("%d.%m в %H:%M")}')
 
-    if notify:
+    if notify_user:
         try:
             await bot.send_message(chat_id = chat_id,
                                 text = f'Следующий квиз запланирован на <b>{run_date.strftime("%d.%m в %H:%M")}</b>',
@@ -52,7 +52,7 @@ async def check_for_quiz(bot: Bot, chat_id: int) -> None:
         username = sqlite3_connector.get_user_by_chat_id(chat_id)
         logger.info(f'(username: {username}), (chat_id: {chat_id}): для пользователя не назначено вопросов')
         await bot.send_message(chat_id, 'Для тебя пока не назначено вопросов')
-        await schedule_quiz(bot, username = username, chat_id = chat_id, notify = True)
+        await schedule_quiz(bot, username = username, chat_id = chat_id, notify_user = True)
         return
 
     state: FSMContext = FSMContext(dp.storage, StorageKey(bot.id, chat_id, chat_id))

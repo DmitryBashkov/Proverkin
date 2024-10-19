@@ -19,6 +19,8 @@ class User:
 
     def __init__(self, username = None, chat_id = None, params = ['user_id', 'chat_id', 'active'], **kwargs):
         
+        # if we're restoring user object from json string
+        # this is applicable when we are going throught FSM
         if len(kwargs) > 0:
             for key, value in kwargs.items():
                 setattr(self, f"{key}", value)
@@ -71,6 +73,8 @@ class User:
             
 
             for i, data_ in enumerate(data):
+                # if we've found a chat_id in db,
+                # we assume that users has started interaction with the bot
                 if params[i] == 'chat_id':
                     if data_ != None:
                         self._started = True
