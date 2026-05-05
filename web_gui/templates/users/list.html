@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Пользователи{% endblock %}
+{% block content %}
+
+<h1>Пользователи</h1>
+
+<div class="toolbar">
+    <a class="btn" href="{{ url_for('users.new_user') }}">+ Новый пользователь</a>
+</div>
+
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Telegram</th>
+            <th>chat_id</th>
+            <th>Имя</th>
+            <th>Тип</th>
+            <th>Аккаунт</th>
+            <th>Активен</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for u in users %}
+        <tr>
+            <td>{{ u[0] }}</td>
+            <td>{{ u[1] or '—' }}</td>
+            <td>{{ u[2] or '—' }}</td>
+            <td>{{ u[3] or '—' }}</td>
+            <td>{{ u[4] }}</td>
+            <td>{{ u[6] or '—' }}</td>
+            <td>{{ 'да' if u[7] == 1 else 'нет' }}</td>
+            <td>
+                <a class="btn secondary" href="{{ url_for('user_sets.manage', user_id = u[0]) }}">Наборы</a>
+                <a class="btn secondary" href="{{ url_for('users.edit_user', user_id = u[0]) }}">Изменить</a>
+                {% if u[2] %}
+                <form class="inline" method="post" action="{{ url_for('users.schedule_user', user_id = u[0]) }}">
+                    <button class="btn">Запланировать квиз</button>
+                </form>
+                {% endif %}
+                <form class="inline" method="post" action="{{ url_for('users.delete_user', user_id = u[0]) }}"
+                      onsubmit="return confirm('Удалить пользователя?');">
+                    <button class="btn danger">×</button>
+                </form>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

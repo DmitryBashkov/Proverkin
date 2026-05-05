@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Изменить' if set_ else 'Новый' }} набор{% endblock %}
+{% block content %}
+
+<h1>{{ 'Набор #' ~ set_[0] if set_ else 'Новый набор' }}</h1>
+
+<form method="post" class="form-grid">
+    <label for="set_name">Название</label>
+    <input id="set_name" name="set_name" type="text" required
+           value="{{ set_[1] if set_ else '' }}">
+
+    <label for="account_id">Аккаунт</label>
+    {% if set_ %}
+        <input type="text" disabled value="{{ set_[2] }}">
+    {% else %}
+        <select id="account_id" name="account_id">
+            {% for a in accounts %}
+            <option value="{{ a[0] }}">{{ a[1] }} (id={{ a[0] }})</option>
+            {% endfor %}
+        </select>
+    {% endif %}
+
+    <label for="generator_model">Модель OpenRouter</label>
+    <input id="generator_model" name="generator_model" type="text"
+           placeholder="например, openai/gpt-4o-mini"
+           value="{{ set_[4] if set_ else '' }}">
+
+    <label for="target_pool_size">Целевой размер очереди</label>
+    <input id="target_pool_size" name="target_pool_size" type="number" min="0"
+           value="{{ set_[5] if set_ else 0 }}">
+
+    <label for="generator_prompt">Промпт для генератора</label>
+    <textarea id="generator_prompt" name="generator_prompt"
+              placeholder="Опиши тему и детали. Если пусто, генератор не трогает этот набор.">{{ set_[3] if set_ else '' }}</textarea>
+
+    <div class="submit">
+        <button type="submit">Сохранить</button>
+        <a class="btn secondary" href="{{ url_for('sets.list_sets') }}">Отмена</a>
+    </div>
+</form>
+
+{% endblock %}

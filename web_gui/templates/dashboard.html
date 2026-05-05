@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Дашборд{% endblock %}
+{% block content %}
+
+<h1>Дашборд</h1>
+
+<div class="cards">
+    <div class="card">
+        <div class="num">{{ users_count }}</div>
+        <div class="label">Пользователей</div>
+    </div>
+    <div class="card">
+        <div class="num">{{ sets_count }}</div>
+        <div class="label">Наборов</div>
+    </div>
+</div>
+
+<h2>Очередь генератора</h2>
+{% if queue_pending %}
+<table>
+    <thead><tr><th>Набор</th><th>В ожидании</th></tr></thead>
+    <tbody>
+    {% for row in queue_pending %}
+        <tr><td>{{ row[0] }}</td><td>{{ row[1] }}</td></tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p class="muted">Очередь пуста</p>
+{% endif %}
+
+{% endblock %}

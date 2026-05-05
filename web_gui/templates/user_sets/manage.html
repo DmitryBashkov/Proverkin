@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}Наборы пользователя{% endblock %}
+{% block content %}
+
+<h1>Наборы для пользователя #{{ user[0] }} — {{ user[1] or user[3] or '—' }}</h1>
+
+<h2>Назначенные</h2>
+{% if bound %}
+<table>
+    <thead><tr><th>Набор</th><th>Кол-во вопросов</th><th></th></tr></thead>
+    <tbody>
+    {% for b in bound %}
+        <tr>
+            <td>{{ b[1] }} (id={{ b[0] }})</td>
+            <td>
+                <form method="post" class="inline">
+                    <input type="hidden" name="set_id" value="{{ b[0] }}">
+                    <input type="hidden" name="action" value="upsert">
+                    <input type="number" name="qty" min="0" value="{{ b[2] }}" style="width: 80px;">
+                    <button class="btn">Сохранить</button>
+                </form>
+            </td>
+            <td>
+                <form method="post" class="inline">
+                    <input type="hidden" name="set_id" value="{{ b[0] }}">
+                    <input type="hidden" name="action" value="remove">
+                    <button class="btn danger">×</button>
+                </form>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p class="muted">Пока не назначено ни одного набора.</p>
+{% endif %}
+
+<h2>Назначить новый</h2>
+<form method="post" class="form-grid">
+    <label for="set_id">Набор</label>
+    <select id="set_id" name="set_id">
+        {% for s in candidate_sets %}
+            <option value="{{ s[0] }}">{{ s[1] }} (id={{ s[0] }}, account={{ s[2] }})</option>
+        {% endfor %}
+    </select>
+
+    <label for="qty">Количество</label>
+    <input id="qty" name="qty" type="number" min="1" value="3">
+
+    <input type="hidden" name="action" value="upsert">
+
+    <div class="submit">
+        <button type="submit">Назначить</button>
+        <a class="btn secondary" href="{{ url_for('users.list_users') }}">Назад к списку</a>
+    </div>
+</form>
+
+{% endblock %}

@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}Очередь{% endblock %}
+{% block content %}
+
+<h1>Очередь сгенерированных вопросов</h1>
+
+<div class="toolbar">
+    <form method="get" class="inline">
+        <select name="set_id">
+            <option value="">Все наборы</option>
+            {% for s in sets %}
+                <option value="{{ s[0] }}" {% if filter_set_id == s[0] %}selected{% endif %}>{{ s[1] }}</option>
+            {% endfor %}
+        </select>
+        <select name="status">
+            <option value="">Все статусы</option>
+            {% for st in ['pending', 'approved', 'rejected', 'consumed'] %}
+                <option value="{{ st }}" {% if filter_status == st %}selected{% endif %}>{{ st }}</option>
+            {% endfor %}
+        </select>
+        <button class="btn secondary">Фильтр</button>
+    </form>
+
+    <form method="post" action="{{ url_for('queue.generate_now') }}" class="inline">
+        <button class="btn">Запустить генерацию сейчас</button>
+    </form>
+</div>
+
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Набор</th>
+            <th>Статус</th>
+            <th>Модель</th>
+            <th>Вопрос</th>
+            <th>Создан</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for it in items %}
+        <tr>
+            <td>{{ it[0] }}</td>
+            <td>{{ it[2] }}</td>
+            <td>{{ it[3] }}</td>
+            <td>{{ it[4] or '—' }}</td>
+            <td>
+                <details>
+                    <summary>{{ it[5].get('question', '')[:80] }}{% if it[5].get('question', '')|length > 80 %}...{% endif %}</summary>
+                    <pre class="payload">{{ it[5] | tojson(indent=2) }}</pre>
+                </details>
+            </td>
+            <td class="muted">{{ it[6].strftime('%d.%m %H:%M') }}</td>
+            <td>
+                {% if it[3] == 'pending' %}
+                <form method="post" action="{{ url_for('queue.promote', item_id = it[0]) }}" class="inline">
+                    <button class="btn">В вопросы</button>
+                </form>
+                <form method="post" action="{{ url_for('queue.reject', item_id = it[0]) }}" class="inline">
+                    <button class="btn danger">Отклонить</button>
+                </form>
+                {% endif %}
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

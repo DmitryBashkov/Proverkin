@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}Наборы{% endblock %}
+{% block content %}
+
+<h1>Наборы вопросов</h1>
+
+<div class="toolbar">
+    <a class="btn" href="{{ url_for('sets.new_set') }}">+ Новый набор</a>
+</div>
+
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Название</th>
+            <th>Account</th>
+            <th>Модель</th>
+            <th>Промпт</th>
+            <th>Pool target</th>
+            <th>Pending</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for s in sets %}
+        <tr>
+            <td>{{ s[0] }}</td>
+            <td>{{ s[1] }}</td>
+            <td>{{ s[2] }}</td>
+            <td>{{ s[4] or '—' }}</td>
+            <td>
+                {% if s[3] %}
+                    <span class="muted">{{ s[3][:80] }}{% if s[3]|length > 80 %}...{% endif %}</span>
+                {% else %}—{% endif %}
+            </td>
+            <td>{{ s[5] }}</td>
+            <td>{{ s[6] if s[6] >= 0 else '?' }}</td>
+            <td>
+                <a class="btn secondary" href="{{ url_for('sets.edit_set', set_id = s[0]) }}">Изменить</a>
+                {% if s[3] and s[5] > 0 %}
+                <form class="inline" method="post" action="{{ url_for('sets.generate_one', set_id = s[0]) }}">
+                    <button class="btn">+1 в очередь</button>
+                </form>
+                {% endif %}
+                <form class="inline" method="post" action="{{ url_for('sets.delete_set', set_id = s[0]) }}"
+                      onsubmit="return confirm('Удалить набор? Все вопросы и привязки удалятся!');">
+                    <button class="btn danger">×</button>
+                </form>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

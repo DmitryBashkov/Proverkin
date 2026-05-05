@@ -1,0 +1,23 @@
+__pycache__/
+*.py[cod]
+*.so
+*.egg-info/
+.eggs/
+
+.env
+.venv/
+venv/
+
+logs/
+*.log
+
+.DS_Store
+.idea/
+.vscode/
+
+# временные файлы Postgres backup
+*.sql.bak
+
+# legacy SQLite БД
+*.sqlite
+*.db

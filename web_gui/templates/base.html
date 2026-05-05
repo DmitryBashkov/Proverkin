@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <title>Proverkin :: {% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header class="topbar">
+        <div class="brand">
+            <a href="{{ url_for('dashboard.index') }}">Proverkin</a>
+        </div>
+        <nav class="nav">
+            <a href="{{ url_for('dashboard.index') }}">Дашборд</a>
+            <a href="{{ url_for('users.list_users') }}">Пользователи</a>
+            <a href="{{ url_for('sets.list_sets') }}">Наборы</a>
+            <a href="{{ url_for('queue.list_queue') }}">Очередь</a>
+            <a href="{{ url_for('logs.list_logs') }}">Логи</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="footer">
+        Proverkin admin
+    </footer>
+</body>
+</html>

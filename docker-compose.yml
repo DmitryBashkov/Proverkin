@@ -1,0 +1,101 @@
+name: proverkin
+
+services:
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: proverkin_postgres
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-proverkin}
+      POSTGRES_USER: ${POSTGRES_USER:-proverkin}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-proverkin}
+      TZ: ${TZ:-Europe/Moscow}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./db/init.sql:/docker-entrypoint-initdb.d/00_init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-proverkin}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  bot_service:
+    build: ./bot_service
+    container_name: proverkin_bot
+    environment:
+      TG_BOT_TOKEN: ${TG_BOT_TOKEN}
+      TG_WEBHOOK_URL: ${TG_WEBHOOK_URL}
+      TG_WEBHOOK_SECRET: ${TG_WEBHOOK_SECRET:-proverkin-secret}
+      QUIZ_URL: http://quiz_service:8001
+      LOG_IN_TERMINAL: "1"
+      TZ: ${TZ:-Europe/Moscow}
+    ports:
+      - "${BOT_PORT:-8000}:8000"
+    depends_on:
+      - quiz_service
+    volumes:
+      - ./logs/bot_service:/app/logs
+    restart: unless-stopped
+
+  quiz_service:
+    build: ./quiz_service
+    container_name: proverkin_quiz
+    environment:
+      POSTGRES_DSN: postgresql://${POSTGRES_USER:-proverkin}:${POSTGRES_PASSWORD:-proverkin}@postgres:5432/${POSTGRES_DB:-proverkin}
+      BOT_URL: http://bot_service:8000
+      GENERATOR_URL: http://generator_service:8002
+      QUIZ_START_HOUR: ${QUIZ_START_HOUR:-10}
+      QUIZ_END_HOUR: ${QUIZ_END_HOUR:-11}
+      LOG_IN_TERMINAL: "1"
+      TZ: ${TZ:-Europe/Moscow}
+    ports:
+      - "${QUIZ_PORT:-8001}:8001"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./logs/quiz_service:/app/logs
+    restart: unless-stopped
+
+  generator_service:
+    build: ./generator_service
+    container_name: proverkin_generator
+    environment:
+      POSTGRES_DSN: postgresql://${POSTGRES_USER:-proverkin}:${POSTGRES_PASSWORD:-proverkin}@postgres:5432/${POSTGRES_DB:-proverkin}
+      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY}
+      OPENROUTER_MODEL: ${OPENROUTER_MODEL:-openai/gpt-4o-mini}
+      GEN_POLL_INTERVAL: ${GEN_POLL_INTERVAL:-60}
+      GEN_BATCH_SIZE: ${GEN_BATCH_SIZE:-3}
+      LOG_IN_TERMINAL: "1"
+      TZ: ${TZ:-Europe/Moscow}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./logs/generator_service:/app/logs
+    restart: unless-stopped
+
+  web_gui:
+    build: ./web_gui
+    container_name: proverkin_web
+    environment:
+      POSTGRES_DSN: postgresql://${POSTGRES_USER:-proverkin}:${POSTGRES_PASSWORD:-proverkin}@postgres:5432/${POSTGRES_DB:-proverkin}
+      QUIZ_URL: http://quiz_service:8001
+      GENERATOR_URL: http://generator_service:8002
+      WEB_ADMIN_USER: ${WEB_ADMIN_USER:-admin}
+      WEB_ADMIN_PASSWORD: ${WEB_ADMIN_PASSWORD:-admin}
+      WEB_SECRET_KEY: ${WEB_SECRET_KEY:-change-me-please}
+      LOG_IN_TERMINAL: "1"
+      TZ: ${TZ:-Europe/Moscow}
+    ports:
+      - "${WEB_PORT:-8080}:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./logs/web_gui:/app/logs
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
