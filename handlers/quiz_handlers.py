@@ -26,10 +26,10 @@ from os import linesep
 import time
 
 
-# Инициализируем роутер уровня модуля
+# Initialize the module-level router
 router: Router = Router()
 
-# инициализируем логгер
+# Initialize the logger
 logger = logging.getLogger(__name__)
 linesep = linesep + '- '
   
@@ -43,9 +43,9 @@ async def get_answer(callback: CallbackQuery, bot: Bot, callback_data = QuizCall
 
     end_time = time.time()
 
-    logging.info(f'{callback.from_user.username}: получили ответ от пользователя index = {callback_data}')
+    logging.info(f'{callback.from_user.username}: received answer from user, index = {callback_data}')
     
-    # получаем сам вопрос и список вопросов
+    # Get the question itself and the question list
     data = await state.get_data()
     
     chat_id = data['chat_id']
@@ -55,7 +55,7 @@ async def get_answer(callback: CallbackQuery, bot: Bot, callback_data = QuizCall
 
     # check if user reports about incorrect question
     if callback_data.incorrect_question:
-        await callback.message.answer(f'Спасибо, информацию зафиксировали!')
+        await callback.message.answer(f'Thank you, we have noted that!')
         sqlite3_connector.update_question_type(callback_data.question_id, 'incorrect')
 
     # if question correct we check answer
@@ -64,7 +64,7 @@ async def get_answer(callback: CallbackQuery, bot: Bot, callback_data = QuizCall
 
         answer = sqlite3_connector.get_answers(answer_id = callback_data.id_)[0][0]
 
-        # проверяем правильный ли ответ дал пользователь
+        # Check if the user's answer is correct
 
         if callback_data.right:
             await callback.answer(text = '✅ ' + random.choice(CONGRATS), show_alert = True)
@@ -74,7 +74,7 @@ async def get_answer(callback: CallbackQuery, bot: Bot, callback_data = QuizCall
         else:
             await callback.answer(text = '❌ ' + random.choice(WRONG), show_alert = True)
             await callback.message.answer(f'❌ {answer}')
-            await callback.message.answer(f"Правильный ответ: {sqlite3_connector.get_answers(question_id = question_id, right = True)[0][0]}")
+            await callback.message.answer(f"Correct answer: {sqlite3_connector.get_answers(question_id = question_id, right = True)[0][0]}")
             await callback.message.delete_reply_markup()
 
     mysql_connector.add_log([
@@ -88,12 +88,12 @@ async def get_answer(callback: CallbackQuery, bot: Bot, callback_data = QuizCall
     randomized_question_list = data['randomized_question_list']
     randomized_question_list.pop(0)
     
-    # проверяем, остались ли у пользователя вопросы в списке
+    # Check if the user has any questions remaining
     if len(randomized_question_list) == 0: 
         # await schedule_next_quiz(message)
         username = sqlite3_connector.get_user_by_chat_id(chat_id)
-        logging.info(f'(username: {username}), (chat_id: {chat_id}): Заканчиваем квиз')
-        await callback.message.answer(f'Квиз закончен! Молодец! 💪')
+        logging.info(f'(username: {username}), (chat_id: {chat_id}): Finishing the quiz')
+        await callback.message.answer(f'Quiz finished! Well done! 💪')
         if not get_job(callback.from_user.username):
             await schedule_quiz(bot, callback.from_user.username, chat_id)
         await state.clear()
@@ -120,13 +120,13 @@ async def get_gpt_score(callback: CallbackQuery, bot: Bot, callback_data = GPTSc
 
     if score:
         sqlite3_connector.add_scored_question(prompt)
-        await callback.message.answer(f'Спасибо! Вопрос: {rewrited_question["response"]} записан')
+        await callback.message.answer(f'Thank you! Question: {rewrited_question["response"]} saved')
 
     if len(randomized_question_list) == 0: 
         # await schedule_next_quiz(message)
         username = sqlite3_connector.get_user_by_chat_id(chat_id)
-        logging.info(f'(username: {username}), (chat_id: {chat_id}): Заканчиваем квиз')
-        await callback.message.answer(f'Квиз закончен! Молодец! 💪')
+        logging.info(f'(username: {username}), (chat_id: {chat_id}): Finishing the quiz')
+        await callback.message.answer(f'Quiz finished! Well done! 💪')
         if not get_job(callback.from_user.username):
             await schedule_quiz(bot, callback.from_user.username, chat_id)
         await state.clear()
