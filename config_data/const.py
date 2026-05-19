@@ -5,6 +5,6 @@ class SQLPositions():
     SPREADSHEET_ID = 3
     ACTIVE = 4
 
-STAT_MODES = {'day_stat': 'Статистика за день', 
-              'week_stat': 'Динамика за неделю',
-              'failed_questions': 'Топ проблемных вопросов'}
+STAT_MODES = {'day_stat': 'Daily statistics', 
+              'week_stat': 'Weekly dynamics',
+              'failed_questions': 'Top problematic questions'}
