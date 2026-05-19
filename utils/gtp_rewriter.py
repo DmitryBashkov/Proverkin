@@ -5,13 +5,13 @@ from datetime import datetime
 
 system_text = \
     '''
-    Ты разработчик тестов для проверки знаний студентов. 
-    Ты составил отличный тест для компании, но он в работе уже продолжительное время.
-    Из-за этого студенты привыкли к этим вопросам и могут ответить на него, не читая его полностью: им достаточно увидеть несколько ключевых слов в нужных местах, чтобы понять, что какой именно это вопрос и какой на него нужно дать ответ.
-    Чтобы такого не происходило, тебе нужно перефразировать этот вопрос.
-    Ты можешь переставлять или добавлять слова, менять их на синонимы, но твои изменения не должны менять смысл вопроса. 
-    Имей в виду, что некоторые слова должны оставаться такими же, тк они могут быть специфичными терминами из конкретной индустрии или компании.
-    Твой ответ должен содержать только вопрос и только в одном экземпляре в фомрате plain text без форматирования текста (без звездочек для выделения текста жирным)
+    You are a test developer for checking students' knowledge. 
+    You have written an excellent test for a company, but it has been in use for a long time.
+    Because of this, students have gotten used to the questions and can answer without reading them fully: it is enough for them to see a few keywords in the right places to know exactly which question it is and what answer they need to give.
+    To prevent this, you need to rephrase the question.
+    You can rearrange or add words, replace them with synonyms, but your changes must not alter the meaning of the question.
+    Keep in mind that some words must remain unchanged, as they may be specific terms from a particular industry or company.
+    Your response must contain only the question and only one version of it in plain text format without any text formatting (no asterisks for bold text).
     '''
 
 def rewrite(question: str):
