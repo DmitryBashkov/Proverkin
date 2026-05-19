@@ -7,130 +7,131 @@ from service.user import User
 
 
 '''
-Группа
+Group
 ==============
-1. На какой вопрос чаще всего отвечают неверно
-2. Правильные/неправильные ответы по дням (неделя)
+1. Which question is most often answered incorrectly
+2. Correct/incorrect answers by day (week)
 '''
 
 def get_day_stat(user: User, user_stat: str) -> FSInputFile | bool:
     pass
     # '''
-    # Эта функция взята с ссылки (очень удачно попалась):
+    # This function is based on a link (very helpful):
     # https://towardsdatascience.com/100-stacked-charts-in-python-6ca3e1962d2b
     # '''
-    # # получаем данные из таблцы гугла и создаем DataFrame
+    # # Get data from Google Sheets and create a DataFrame
     # stat_from_sheet = gsheet.get_users_stat(user)
     # df = pd.DataFrame(stat_from_sheet[1:], columns = stat_from_sheet[0])
 
-    # # определяем типа данных в столбце "Дата"
-    # df['Дата'] = pd.to_datetime(df['Дата'], dayfirst = True)
+    # # Define the data type for the "Date" column
+    # df['Date'] = pd.to_datetime(df['Date'], dayfirst = True)
 
-    # # оставляем записи только с сегодняшней датой
-    # df = df[df['Дата'].dt.date == pd.Timestamp.now().date()]
+    # # Keep only records with today's date
+    # df = df[df['Date'].dt.date == pd.Timestamp.now().date()]
 
-    # # если в аргументе был передан конкретный пользовтаеля,
-    # # то дополнительно фильтурем таблицу по нему
+    # # If a specific user was passed as an argument,
+    # # additionally filter the table by that user
     # if user_stat != 'all':
-    #     df = df[df['Логин'] == user_stat]
+    #     df = df[df['Login'] == user_stat]
 
     # if df.empty:
     #     return False
 
-    # # оставляем только два столбца 'Логин' и 'Результат'
-    # df = df.loc[:,['Логин', 'Результат']]
+    # # Keep only the 'Login' and 'Result' columns
+    # df = df.loc[:,['Login', 'Result']]
 
-    # # какая-то магия, которая мне пока непонятна
-    # cross_tab_prop = pd.crosstab(index=df['Логин'],
-    #                             columns=df['Результат'],
+    # # Some magic that I don't quite understand yet
+    # cross_tab_prop = pd.crosstab(index=df['Login'],
+    #                             columns=df['Result'],
     #                             normalize="index")
 
-    # # сортируем по количесту правильных ответов
-    # cross_tab_prop = cross_tab_prop.sort_values('Верно')
+    # # Sort by number of correct answers
+    # cross_tab_prop = cross_tab_prop.sort_values('Correct')
 
-    # # создаем график
+    # # Create the chart
     # cross_tab_prop.plot(kind = 'barh', stacked = True, figsize = [7, 5])
 
-    # # сохраняем изображение, bbox_inches = 'tight' убирает лишние белые поля
+    # # Save the image, bbox_inches = 'tight' removes extra whitespace
     # plt.savefig('fig.png', bbox_inches = 'tight')
 
-    # # передаем объект файла
+    # # Return the file object
     # file = FSInputFile('fig.png')
     # return file
 
 def get_week_stat(user: User, user_stat: str) -> FSInputFile:
     pass
-    # # получаем данные из таблцы гугла и создаем DataFrame
+    # # Get data from Google Sheets and create a DataFrame
     # stat_from_sheet = gsheet.get_users_stat(user)
     # df = pd.DataFrame(stat_from_sheet[1:], columns = stat_from_sheet[0])
 
-    # # оставляем записи за последнюю неделю
+    # # Keep records from the last week
     # date = datetime.datetime.now() - datetime.timedelta(days = 7)
-    # df = df[df['Дата'].astype('datetime64[ns]') >= date]
+    # df = df[df['Date'].astype('datetime64[ns]') >= date]
 
-    # # если в аргументе был передан конкретный пользовтаеля,
-    # # то дополнительно фильтурем таблицу по нему
+    # # If a specific user was passed as an argument,
+    # # additionally filter the table by that user
     # if user_stat != 'all':
-    #     df = df[df['Логин'] == user_stat]
+    #     df = df[df['Login'] == user_stat]
 
     # if df.empty:
     #     return False
 
-    # # оставляем только два столбца 'Логин' и 'Результат'
-    # df = df.loc[:,['Дата', 'Результат']]
+    # # Keep only the 'Date' and 'Result' columns
+    # df = df.loc[:,['Date', 'Result']]
 
-    # # какая-то магия, которая мне пока непонятна
-    # cross_tab_prop = pd.crosstab(index = df['Дата'],
-    #                             columns = df['Результат'],
+    # # Some magic that is becoming slightly clearer.
+    # # Reset the index since we need to get a list later.
+    # # Otherwise the question itself would be the index.
+    # cross_tab_prop = pd.crosstab(index = df['Date'],
+    #                             columns = df['Result'],
     #                             normalize = 'index')
 
-    # # сортируем по количесту правильных ответов
-    # cross_tab_prop = cross_tab_prop.sort_values('Дата')
+    # # Sort by number of correct answers
+    # cross_tab_prop = cross_tab_prop.sort_values('Date')
 
-    # # создаем график
+    # # Create the chart
     # cross_tab_prop.plot(kind = 'bar', stacked = True, figsize = [5, 5], xlabel = '')
-    # plt.title('Динамика правильных ответов за последние 7 дней')
+    # plt.title('Correct answer dynamics over the last 7 days')
 
-    # # сохраняем изображение, bbox_inches = 'tight' убирает лишние белые поля
+    # # Save the image, bbox_inches = 'tight' removes extra whitespace
     # plt.savefig('fig.png', bbox_inches = 'tight')
 
-    # # передаем объект файла
+    # # Return the file object
     # file = FSInputFile('fig.png')
     # return file
 
 def get_failed_questions(user: User, user_stat: str, days: int = 7, ) -> list:
     pass
-    # # получаем данные из таблцы гугла и создаем DataFrame
+    # # Get data from Google Sheets and create a DataFrame
     # stat_from_sheet = gsheet.get_users_stat(user)
     # df = pd.DataFrame(stat_from_sheet[1:], columns = stat_from_sheet[0])
 
-    # # оставляем записи за последнюю неделю
+    # # Keep records from the last week
     # date = datetime.datetime.now() - datetime.timedelta(days = days)
-    # df = df[df['Дата'].astype('datetime64[ns]') >= date]
+    # df = df[df['Date'].astype('datetime64[ns]') >= date]
 
-    # # если в аргументе был передан конкретный пользовтаеля,
-    # # то дополнительно фильтурем таблицу по нему
+    # # If a specific user was passed as an argument,
+    # # additionally filter the table by that user
     # if user_stat != 'all':
-    #     df = df[df['Логин'] == user_stat]
+    #     df = df[df['Login'] == user_stat]
 
     # if df.empty:
     #     return False
 
-    # # выбираем только вопросы с неправильными ответами
-    # df = df[df['Результат'] == 'Неверно']
+    # # Select only questions with incorrect answers
+    # df = df[df['Result'] == 'Incorrect']
 
-    # # оставляем только два столбца 'Логин' и 'Результат'
-    # df = df.loc[:,['Вопрос (текст)', 'Результат']]
+    # # Keep only the 'Login' and 'Result' columns
+    # df = df.loc[:,['Question (text)', 'Result']]
 
-    # # какая-то магия, которая становится чуть понятнее.
-    # # обновляем индекс, тк потом надо получить list.
-    # # в противном случае сам вопрос будет индексом
-    # cross_tab_prop = pd.crosstab(index = df['Вопрос (текст)'],
-    #                          columns = df['Результат']).reset_index()
+    # # Some magic that is becoming a bit clearer.
+    # # Reset the index since we need to get a list later.
+    # # Otherwise the question itself would be the index.
+    # cross_tab_prop = pd.crosstab(index = df['Question (text)'],
+    #                          columns = df['Result']).reset_index()
 
-    # # сортируем по количесту неправильных ответов от большего к меньшему
-    # cross_tab_prop = cross_tab_prop.sort_values('Неверно', ascending = False)
+    # # Sort by number of incorrect answers from highest to lowest
+    # cross_tab_prop = cross_tab_prop.sort_values('Incorrect', ascending = False)
 
-    # # переносим все в list и передаем на выход
+    # # Convert to a list and return
     # return cross_tab_prop.head().values.tolist()
-    
