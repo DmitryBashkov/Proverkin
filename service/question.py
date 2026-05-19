@@ -34,9 +34,9 @@ class Question:
             random.shuffle(self.answers)
 
         '''
-        проверяем, есть ли среди ответов длинные строки
-        если есть, то засовываем их в сам текст вопроса,
-        а в ответах просто даем цифры
+        Check if any answers contain long strings.
+        If so, embed them in the question text itself,
+        and use only numbers/bullets in the answer buttons.
         '''
 
         self.long_asnwers = False
@@ -91,5 +91,3 @@ class QuestionSet():
 
 
     pass
-
-
