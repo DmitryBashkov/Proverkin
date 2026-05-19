@@ -21,7 +21,7 @@ import shutil
 import datetime
 
 
-# Инициализируем роутер уровня модуля
+# Initialize the module-level router
 router: Router = Router()
 router.message.filter(IsAdmin())
 logger = logging.getLogger(__name__)
@@ -38,31 +38,31 @@ async def cmd_edit_questions(message: Message, bot: Bot, command: CommandObject,
     '''
     
     '''
-    logger.info(f'(username: {message.from_user.username}), (chat_id: {message.from_user.id}): запрос на редактирование БД')
+    logger.info(f'(username: {message.from_user.username}), (chat_id: {message.from_user.id}): request to edit the database')
 
-    # делаем бэкап БД в формате ДД-ММ-ГГ_ЧЧ-ММ-СС
+    # Make a backup of the DB in DD-MM-YY_HH-MM-SS format
     backup_date_stamp =  datetime.datetime.now().strftime("%d-%m-%Y_%H-%M-%S")
     shutil.copy2(config.db.l_path, f'{config.db.backup_directory}backup_{backup_date_stamp}')
 
-    # заносим в лог инормациф о бекапе
-    logger.info(f'(username: {message.from_user.username}), (chat_id: {message.from_user.id}): создан бэкап - {backup_date_stamp}')
+    # Log info about the backup
+    logger.info(f'(username: {message.from_user.username}), (chat_id: {message.from_user.id}): backup created - {backup_date_stamp}')
 
-    # получаем account_id пользователя
+    # Get the user's account_id
     account_id = sqlite3_connector.get_account_id_by_chat_id(message.from_user.id)
 
-    # сохраняем все вопросы в эксель
+    # Save all questions to Excel
     export_file = FSInputFile(Excel.download_questions(account_id))
-		
-    # отправляем файл пользователю
+	
+    # Send the file to the user
     await message.answer_document(export_file)
 
-    # отправляем кнопку отмены
-    await message.answer(text = 'Отправьте обратно обновленный файл', reply_markup = cancel_edit_keyboard())
+    # Send a cancel button
+    await message.answer(text = 'Please send back the updated file', reply_markup = cancel_edit_keyboard())
 
-    # переходим в ожидание обновленного файла от пользователя
+    # Transition to waiting for the updated file from the user
     await state.set_state(EditQuestionsState.get_updated_file)
 
-    # заносим инфу в state
+    # Store info in state
     await state.update_data(account_id = account_id)
 
 @router.message(Command(commands='add'))
@@ -78,31 +78,30 @@ async def cmd_add_questions(message: Message, bot: Bot, command: CommandObject):
 @router.message(StateFilter(EditQuestionsState.get_updated_file), IsDocument())
 async def get_questions_updates(message: Message, bot: Bot, state: FSMContext):
 
-    # заносим в логи, что пользователь прислал файл
-    logger.info(f'(username: {message.from_user.username}), (chat_id: {message.from_user.id}): пользователь прислал файл ({message.document.file_name})')
+    # Log that the user sent a file
+    logger.info(f'(username: {message.from_user.username}), (chat_id: {message.from_user.id}): user sent a file ({message.document.file_name})')
 
-    # загружаем файл в папку с импортом
+    # Download the file to the import folder
     await bot.download(file = message.document.file_id, 
                        destination = f'{config.import_file_storage}/{message.document.file_name}')
 
-    # получаем информацию из state 
+    # Retrieve information from state
     data = await state.get_data()
     account_id = data['account_id']
 
-    # обновляем вопросы в БД
+    # Update questions in the database
     Excel.upload_questions(account_id, f'{config.import_file_storage}/{message.document.file_name}')
 
-    # заноси в логи
-    logger.info(f'(username: {message.from_user.username}), (chat_id: {message.from_user.id}): данные из файла ({message.document.file_name}) обновлены')
+    # Log the update
+    logger.info(f'(username: {message.from_user.username}), (chat_id: {message.from_user.id}): data from file ({message.document.file_name}) updated')
 
-    # оповещаем пользователя
-    await message.answer('Вопросы обновлены')
+    # Notify the user
+    await message.answer('Questions updated')
 
-    # выходим из state
+    # Exit state
     await state.clear()
 
 @router.callback_query(CancelEditCallbackFactory.filter(), StateFilter(EditQuestionsState.get_updated_file))
 async def cancel_edit(callback: CallbackQuery, state: FSMContext):
     await callback.message.delete()
     await state.clear()
-
