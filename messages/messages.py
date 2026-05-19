@@ -1,100 +1,100 @@
-CONGRATS = ['💪 Круто! Так держать!',
-            '🔪 Дикий, дерзский, как пуля резкий!',
-            '🤙 Четко!',
-            '🔥 Огонь!',
-            '💡 Великолепно!',
-            '🥸 Ты профи!',
-            '🎯 В яблочко!',
-            '👍 Молодец!',
-            '💰 Думаю, ты можешь просить повышение!',
-            '🥇 Ты чемпион!',
-            '👏 Гениально!',
-            '💯 Пострясающе точный ответ!',
-            '🍹 Восхитительно!',
-            '👊 Топчик!',
-            '💎 Бриллиантово!',
-            '🍾 Ура!',
-            '🚀 Просто взлетно!',
-            '🌟 Звездный результат!',
-            '🎉 Мастерски!',
-            '🏆 Непревзойденно!',
-            '🎇 Впечатляюще!',
-            '🌈 Ярко и красиво!',
-            '🌺 Прекрасная работа!',
-            '🔝 Ты на вершине!',
-            '💥 Взрыв мозга!',
-            '💫 Ты звезда!',
-            '🤩 Блестяще!',
-            '🍀 Удача на твоей стороне!',
-            '🦄 Сказочно!'
+CONGRATS = ['💪 Great job! Keep it up!',
+            '🔪 Wild, bold, sharp as a bullet!',
+            '🤙 Nailed it!',
+            '🔥 On fire!',
+            '💡 Magnificent!',
+            '🥸 You\'re a pro!',
+            '🎯 Bullseye!',
+            '👍 Well done!',
+            '💰 I think you can ask for a raise!',
+            '🥇 You\'re a champion!',
+            '👏 Brilliant!',
+            '💯 Incredibly accurate answer!',
+            '🍹 Wonderful!',
+            '👊 Top notch!',
+            '💎 Diamond performance!',
+            '🍾 Hooray!',
+            '🚀 Simply stellar!',
+            '🌟 Star result!',
+            '🎉 Masterful!',
+            '🏆 Unmatched!',
+            '🎇 Impressive!',
+            '🌈 Bright and beautiful!',
+            '🌺 Great work!',
+            '🔝 You\'re at the top!',
+            '💥 Mind-blowing!',
+            '💫 You\'re a star!',
+            '🤩 Brilliant!',
+            '🍀 Luck is on your side!',
+            '🦄 Magical!'
             ]
 
-WRONG = ['В следующий раз точно получится!',
-         'Эм.. ну почти...)',
-         'Не унывай!',
-         'Просто соберись!',
-         'Может тебе стоит вернутся к вопросам послше чашечки ☕️?',
-         'Эх... давай еще разик?',
-         'А вот здесь ты не прав(',
-         'Прям совсем близко, но не то(']
+WRONG = ['You\'ll get it next time!',
+         'Hmm.. almost...)',
+         'Don\'t give up!',
+         'Just focus!',
+         'Maybe you should revisit the questions after a cup of ☕️?',
+         'Aww... want to try again?',
+         'That\'s not quite right(',
+         'So close, but not quite(']
 
-READY = ['Готов!',
-         'Давай его скорее!',
-         '🚀 Поехали!',
-         'Жду не дождусь!',
-         'Полетели!',
-         'Вперед, к победе!',
-         'Скорее, скорее!',
-         'Справлюсь на все 💯!',
-         'Давай ва-банк!',
-         'Вперед, к новым свершениям!',
-         'Ну что там у вас?',
-         'Опять эти глупые вопросы?',
-         'Давай разберемся с этим',
-         'Я и сам своего рода эксперт',
-         'Давай посмотрим',
-         'Я заждался весь!',
-         'В предвкушении!']
+READY = ['Ready!',
+         'Bring it on!',
+         '🚀 Let\'s go!',
+         'Can\'t wait!',
+         'Let\'s fly!',
+         'Onwards to victory!',
+         'Faster, faster!',
+         'I\'ll ace it 💯!',
+         'Let\'s go all in!',
+         'Onwards to new achievements!',
+         'What have you got for me?',
+         'These easy questions again?',
+         'Let\'s sort this out',
+         'I\'m something of an expert myself',
+         'Let\'s see',
+         'I\'ve been waiting!',
+         'In anticipation!']
 
 
-         # 'Как два пальца об асфальт!',   
+         # 'Easy as pie!',   
          # ,
          # ,
-         # 'Как Тузик грелку!',
+         # 'Like taking candy from a baby!',
          # ,
          # ,
          # ,
          # ',
-         # 'Спорим, отвечу не глядя?'
+         # 'Bet I can answer without even looking?'
          
 
-MESSAGES = {'welcome_message' : "Привет! ✋\n\n"
-                                    "🤖 Booosted Quick Quiz Bot рад приветствовать тебя!\n\n"
-                                    "📌 Я создан для одной цели – задавать тебе вопросы в определенное время, чтобы ты никогда не забывал важную информацию.\n\n"
-                                    "🎮 Работа с тестом начнется автоматически, если ты уже добавлен в квиз. Вопросы отпавляются каждый день с 10 до 11 утра\n\n\n"
-                                    "Удачи!",
+MESSAGES = {'welcome_message' : "Hello! ✋\n\n"
+                                    "🤖 Booosted Quick Quiz Bot is happy to welcome you!\n\n"
+                                    "📌 I was created for one purpose – to ask you questions at a specific time, so you never forget important information.\n\n"
+                                    "🎮 The quiz will start automatically if you have already been added to a quiz. Questions are sent every day between 10 and 11 AM\n\n\n"
+                                    "Good luck!",
 
-            'help_message' : "Здесь будет текст про команды и как пользваться ботом",
+            'help_message' : "Here will be text about commands and how to use the bot",
 
-            'add_question_help_message' : "Привет! Здесь будет написана помощь по добавлению нового вопроса.",
-            'create_new_table_instruction': "Инсутрукция:\n"
-                                            "Все вопросы для бота берутся из таблицы. Пользователь может создать свою таблицу или быть приглашен в чужую\n\n"
-                                            "1️⃣ Переди по ссылке https://docs.google.com/spreadsheets/d/1D6DCi2yb9gshzj7Hf6aRvgfL0EDM65H9XUODKl_fSME/copy\n\n"
-                                            "2️⃣ Google предложит скопировать образец таблицы. Сохрани ее на свой гугл диск в любое удобное место\n\n"
-                                            "3️⃣ Напиши вопросы, укажи правильные и неправильные ответы. При желании, во вкладке *users укажи кто еще будет пользоваться таблицей\n\n"
-                                            "4️⃣ Обязательно дай полный доступ сервисному аккаунту (service@quickquizbot.iam.gserviceaccount.com) или любому, у кого есть ссылка"
-                                            "4️⃣ Отправь мне сообщение ссылку на созданную таблицу (бери прямо из адресной строки, как есть)\n\n"
-                                            "5️⃣ Отправка вопросов запланируется автоматически, и в ближайшие 10 утра все, кто указан в *users их получат\n\n"
-                                            "Немного о том, что из себя представляет таблица\n\n"
-                                            "🍏 По умолчанию у тебя есть три вкладки: Основная, *stat и *users\n\n"
-                                            "🍑 Основная - это сам список вопросов. Там есть текст вопроса, правильный ответ и несколько неправильных. Ты можешь указывать сколько угодно неправильных ответов.\n\n"
-                                            "🍐 Ты можешь создать дополнительные вкладки, назвать их по своему желанию. Таким образом ты сможешь сгруппировать вопросы по темам. Например: корпоративная культура, основы бухгалтерии, процесс продажи итд\n\n"
-                                            "🍊 Вкладка *stat предназанчена для сбора статистики, кто и когда на какие вопросы отвечал, какой дал ответ, и правильный ли это ответ. Не меняй ничего на этой влкадке, пожалуйста, что бы бот работал исправно\n\n"
-                                            "🍋 Во складке *users хранится инфомрация о том, кому отправляются вопросы, какие и сколько. Чтобы добавить пользователя просто впишите его логин (без @)  соовтетствующее поле  Для удобства, вы также можете указать его ФИО (пригодится во влкадке статистики). В поле доступных списков вы можете указать из каких вкладок этому пользователю буду приходит вопросы и сколько именно. Например, если нужно, чтобы из вкладки Основная было отправлено 10 вопросов, а из вкладки корпоративная культара 5, тогда запишите в поле: Основная: 10, Корпоративная культура: 5\n\n"
-                                            "🍌 Все вопросы по очереди отправляются с 10 до 11 утра каждого рабочего дня"}
+            'add_question_help_message' : "Hello! Here will be help text for adding a new question.",
+            'create_new_table_instruction': "Instructions:\n"
+                                            "All questions for the bot are taken from a spreadsheet. A user can create their own spreadsheet or be invited to someone else's.\n\n"
+                                            "1️⃣ Follow the link https://docs.google.com/spreadsheets/d/1D6DCi2yb9gshzj7Hf6aRvgfL0EDM65H9XUODKl_fSME/copy\n\n"
+                                            "2️⃣ Google will offer to copy the sample spreadsheet. Save it to your Google Drive in any convenient location.\n\n"
+                                            "3️⃣ Write questions, specify correct and incorrect answers. If desired, in the *users tab specify who else will use the spreadsheet.\n\n"
+                                            "4️⃣ Be sure to grant full access to the service account (service@quickquizbot.iam.gserviceaccount.com) or to anyone with the link."
+                                            "4️⃣ Send me the link to the created spreadsheet (copy it directly from the address bar as-is)\n\n"
+                                            "5️⃣ Question delivery will be scheduled automatically, and the next day at 10 AM everyone listed in *users will receive them.\n\n"
+                                            "A bit about the spreadsheet structure\n\n"
+                                            "🍏 By default you have three tabs: Main, *stat and *users\n\n"
+                                            "🍑 Main – this is the question list itself. It contains the question text, the correct answer and several incorrect ones. You can specify as many incorrect answers as you want.\n\n"
+                                            "🍐 You can create additional tabs and name them as you wish. This allows you to group questions by topic. For example: corporate culture, accounting basics, sales process, etc.\n\n"
+                                            "🍊 The *stat tab is designed to collect statistics: who answered which questions, when, what answer was given, and whether it was correct. Please do not change anything in this tab so the bot works correctly.\n\n"
+                                            "🍋 The *users tab stores information about who receives questions, which ones and how many. To add a user, simply enter their login (without @) in the corresponding field. For convenience, you can also specify their full name (useful in the statistics tab). In the available lists field you can specify which tabs this user will receive questions from and how many. For example, if you need 10 questions from the Main tab and 5 from the Corporate Culture tab, write: Main: 10, Corporate Culture: 5\n\n"
+                                            "🍌 All questions are sent in turn between 10 and 11 AM every working day"}
 
 
-ALERTS = {'question_added' : "Отлично! Мы добавили новый вопрос!\n\n"}
+ALERTS = {'question_added' : "Great! We have added a new question!\n\n"}
 
-CONFIRMATIONS = {'question_confirmed' : "Да, все верно",
-                'question_not_confirmed' : "Нет, давай все переделаем"}
+CONFIRMATIONS = {'question_confirmed' : "Yes, that's correct",
+                'question_not_confirmed' : "No, let's redo everything"}
