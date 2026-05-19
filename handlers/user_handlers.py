@@ -19,7 +19,7 @@ from utils.misc import get_job
 
 router: Router = Router()
 
-# инициализируем логгер
+# Initialize the logger
 logger = logging.getLogger(__name__)
 
 @router.message(Command(commands = 'quiz'), IsExist())
@@ -28,30 +28,30 @@ async def cmd_test(message: Message, bot: Bot, state: FSMContext):
 
 @router.message(Command(commands='restart'))
 async def cmd_restart(message: Message, bot: Bot, state: FSMContext, is_test = False):
-    logger.info(f'(username: {message.from_user.username}), (chat_id: {message.from_user.id}): команда /restart')
+    logger.info(f'(username: {message.from_user.username}), (chat_id: {message.from_user.id}): command /restart')
 
-    #проверяем, если ли юзер в бд
+    # Check if the user exists in the database
     user = sqlite3_connector.get_user(username=message.from_user.username, params=['user_id', 'chat_id'])
 
     if user == None:
-        logger.info(f'(username: {message.from_user.username}), (chat_id: {message.from_user.id}): Пользователя нет в бд')
+        logger.info(f'(username: {message.from_user.username}), (chat_id: {message.from_user.id}): User not found in the database')
         return
 
-    # если пользователя внесли в базу, нет chat_id, значит он еще ни разу не писал в бот.
-    # мы записываем его chat_id и сразу назначаем квиз
+    # If the user was added to the database but has no chat_id, they have never written to the bot.
+    # We save their chat_id and immediately schedule a quiz.
     if user[1] == None:
-        logger.info(f'(username: {message.from_user.username}), (chat_id: {message.from_user.id}): У пользователя нет chat_id')
+        logger.info(f'(username: {message.from_user.username}), (chat_id: {message.from_user.id}): User has no chat_id')
         sqlite3_connector.add_chat_id(message.from_user.username, message.from_user.id)
-        logger.info(f'(username: {message.from_user.username}), (chat_id: {message.from_user.id}): добавили chat_id {message.from_user.id}')
+        logger.info(f'(username: {message.from_user.username}), (chat_id: {message.from_user.id}): added chat_id {message.from_user.id}')
 
-    # убираем state если он был
+    # Clear state if there was one
     await state.clear()
 
-    # удаляем задачу из планировщика, если такая была, и ставим новую
+    # Remove the scheduled job if there was one, and schedule a new one
     existing_job = get_job(message.from_user.username)
 
     if existing_job != None:
-        logger.info(f'(username: {message.from_user.username}), (chat_id: {message.from_user.id}): у пользователя есть запланированный квиз {existing_job.id} на {existing_job.next_run_time.strftime("%d.%m в %H:%M")}')
+        logger.info(f'(username: {message.from_user.username}), (chat_id: {message.from_user.id}): user has a scheduled quiz {existing_job.id} at {existing_job.next_run_time.strftime("%d.%m at %H:%M")}')
         existing_job.remove()
     
     await schedule_quiz(bot, message.from_user.username, message.from_user.id, True)
