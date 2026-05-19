@@ -21,7 +21,7 @@ class IsDocument(BaseFilter):
                 return True
             
             else:
-                await message.answer(f'Неверный формат файла {format(pathlib.Path(message.document.file_name).suffix)}')
+                await message.answer(f'Invalid file format {format(pathlib.Path(message.document.file_name).suffix)}')
                 return False
         else:
             return False
