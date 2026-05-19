@@ -199,13 +199,13 @@ class SQLite3Connector:
         user_id = ? and set_id = ?
         '''
 
-        # создаем массив с  set_id, которые есть у пользователя
+        # Create an array of set_ids that the user has
         set_list = SQLite3Connector.get_users_set_list(user_id = user_id)
         user_sets = [set_[0] for set_ in set_list]
         
-        # если сета, в который нужно внести изменения нет в списке, 
-        # то мы либо ничего не делаем, либо удаляем запись
-        # если есть, то апдейтим запись
+        # If the set to be modified is not in the list,
+        # we either do nothing or delete the record.
+        # If it is, we update the record.
 
         # zero_qty = qty == 0 | type(qty) == None or qty == '0' or qty == ' ' or qty == None
 
@@ -233,7 +233,7 @@ class SQLite3Connector:
                 
 
 
-        # во всех остальных случая обновляем количество вопросов
+        # In all other cases, update the question count
     
     @staticmethod
     def execute(database_path: str,
@@ -309,11 +309,11 @@ class SQLite3Connector:
                 
                 return True
             else:
-                print(f'Проверьте базу данных. Список таблиц: {table_set}')
+                print(f'Please check the database. Table list: {table_set}')
                 return False
             
         else:
-            logging.info(f'Отсутствует файл базы данных: {config.db.l_path}')
+            logging.info(f'Database file not found: {config.db.l_path}')
                
     @staticmethod
     def is_admin(chat_id):
@@ -373,7 +373,7 @@ class SQLite3Connector:
     @staticmethod
     def get_account_id_by_chat_id(chat_id: int):
         '''
-        Возвращает account_id по chat_id
+        Returns account_id by chat_id
         '''
         request = \
         '''
@@ -787,12 +787,12 @@ class SQLite3Connector:
     def remove_question(question_id: int):
 
         '''
-        удаляет вопрос из БД по его id,
-        а также все связанные с ним ответы
+        Deletes a question from the database by its id,
+        as well as all associated answers.
         '''
         pass
 
-        # сначала удаляем вопрос
+        # First delete the question
         query = \
             '''
             delete
@@ -808,7 +808,7 @@ class SQLite3Connector:
             (question_id,)
         )
 
-        # а потом удаляем ответы
+        # Then delete the answers
         query = \
             '''
             delete
