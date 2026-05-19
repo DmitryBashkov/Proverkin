@@ -6,7 +6,7 @@ import json
 
 @dataclass
 class TgBot:
-    token: str             # Токен для доступа к телеграм-боту
+    token: str             # Token for accessing the Telegram bot
 
 @dataclass
 class GCredentials:
@@ -41,33 +41,33 @@ class Config:
     yandex_gpt_api: str
 
 '''
-======== загружаем данные из .env: токен бота и путь к файлу конфигурации ========
+======== Load data from .env: bot token and path to config file ========
 '''
 
 dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
 if os.path.exists(dotenv_path):
     load_dotenv(dotenv_path)
-    print(f'Конфигурация {dotenv_path} загружена')
+    print(f'Configuration {dotenv_path} loaded')
 else:
-    print(f'Не удалось загрузить {dotenv_path} конфигурацию')
+    print(f'Failed to load {dotenv_path} configuration')
 
 
 '''
-======== загружаем данные из файла кофигурации (config.json) ========
+======== Load data from config file (config.json) ========
 '''
 json_data = None
 try:
     with open(os.environ.get('BOT_CONFIG'), 'r') as jsonfile:
         json_data = json.load(jsonfile)
 except FileNotFoundError as error:
-    print(f'Не удалось загрузить {os.environ.get("BOT_CONFIG")} конфигураци\n'
-                f'Ошибка: {error}')
+    print(f'Failed to load {os.environ.get("BOT_CONFIG")} configuration\n'
+                f'Error: {error}')
 else:
-    print(f'Конфигурация {os.environ.get("BOT_CONFIG")} загружена')
+    print(f'Configuration {os.environ.get("BOT_CONFIG")} loaded')
 
 
 '''
-======== создаем объект кофигурации ========
+======== Create the configuration object ========
 '''
 
 
@@ -98,6 +98,6 @@ config = Config(
     )
 
 if config != None:
-    print('Объект кофигурации создан')
+    print('Configuration object created')
 else:
-    print(('Объект кофигурации не создан'))
+    print(('Configuration object not created'))
