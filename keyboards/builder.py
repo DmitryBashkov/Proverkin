@@ -45,7 +45,7 @@ def quiz_answers_keyboard(question: Question) -> InlineKeyboardMarkup:
           )
 
      keyboard.button(
-          text = f'❗️Некорректный вопрос❗️',
+          text = f'❗️Incorrect question❗️',
           callback_data = QuizCallbackFactory(
                id_ = 0,
                incorrect_question = True,
@@ -62,11 +62,11 @@ def quiz_answers_keyboard(question: Question) -> InlineKeyboardMarkup:
 def score_gpt_keyboard() -> InlineKeyboardMarkup:
      keyboard = InlineKeyboardBuilder()
      keyboard.button(
-          text = 'Подходящий вопрос',
+          text = 'Good question',
           callback_data = GPTScoreCallbackFactory(score = True)
           )
      keyboard.button(
-          text = 'Этот вопрос не подходит',
+          text = 'This question is not suitable',
           callback_data = GPTScoreCallbackFactory(score = False)
           )
      
@@ -76,7 +76,7 @@ def cancel_edit_keyboard() -> InlineKeyboardMarkup:
 
      keyboard = InlineKeyboardBuilder()
      keyboard.button(
-          text = 'Отмена',
+          text = 'Cancel',
           callback_data = CancelEditCallbackFactory()
           )
      
