@@ -41,7 +41,7 @@ class User:
         self._sets = None
         self._started = None
         self._exist = None
-        self._blocked = None                # заблокирован ли бот пользователем
+        self._blocked = None                # whether the user has blocked the bot
         
 
         # getting data from DB and associate it with class attributes
@@ -207,7 +207,7 @@ class User:
     #         self._name = None
     #         self._email = None
     #         self._age = None
-    #         # Другие атрибуты...
+    #         # Other attributes...
 
     #     @property
     #     def name(self):
@@ -227,16 +227,16 @@ class User:
     #             self._age = self._get_age_from_db()
     #         return self._age
 
-    #     # Другие методы доступа к атрибутам...
+    #     # Other attribute accessor methods...
 
     #     def _get_name_from_db(self):
-    #         # Логика получения значения атрибута name из БД
+    #         # Logic for getting the name attribute value from the DB
     #         return "John Doe"
 
     #     def _get_email_from_db(self):
-    #         # Логика получения значения атрибута email из БД
+    #         # Logic for getting the email attribute value from the DB
     #         return "johndoe@example.com"
 
     #     def _get_age_from_db(self):
-    #         # Логика получения значения атрибута age из БД
+    #         # Logic for getting the age attribute value from the DB
     #         return 30
